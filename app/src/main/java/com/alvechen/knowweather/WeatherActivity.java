@@ -4,11 +4,15 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -28,6 +32,10 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class WeatherActivity extends AppCompatActivity {
+
+    public DrawerLayout drawerLayout;
+
+    private Button  navButton;
 
     public SwipeRefreshLayout swipeRefresh;
 
@@ -87,6 +95,15 @@ public class WeatherActivity extends AppCompatActivity {
         swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
 
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        navButton = (Button) findViewById(R.id.nav_button);
+        navButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
+
         //从缓存中去数据
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String weatherString = prefs.getString("weather",null);
@@ -125,7 +142,7 @@ public class WeatherActivity extends AppCompatActivity {
      * 根据天气id请求天气数据
      * @param weatherId
      */
-    private void requestWeather(final String weatherId){
+    public void requestWeather(final String weatherId){
 
         String weatherUrl = "http://guolin.tech/api/weather?cityid=" + weatherId + "&key=36eb708ce5fb42ac925d1eda79e2b510";
         HttpUtil.sendOkHttpRequest(weatherUrl, new Callback() {
@@ -154,7 +171,6 @@ public class WeatherActivity extends AppCompatActivity {
 
                         //结束刷新
                         swipeRefresh.setRefreshing(false);
-
 
                     }
                 });
