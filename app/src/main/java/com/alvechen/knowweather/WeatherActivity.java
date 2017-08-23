@@ -1,5 +1,6 @@
 package com.alvechen.knowweather;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 
 import com.alvechen.knowweather.gson.Forecast;
 import com.alvechen.knowweather.gson.Weather;
+import com.alvechen.knowweather.service.AutoUpdateService;
 import com.alvechen.knowweather.util.HttpUtil;
 import com.alvechen.knowweather.util.Utility;
 import com.bumptech.glide.Glide;
@@ -280,5 +282,9 @@ public class WeatherActivity extends AppCompatActivity {
         sportText.setText(sport);
 
         weatherLayout.setVisibility(View.VISIBLE);
+
+        //启动后台更新服务
+        Intent intent = new Intent(this, AutoUpdateService.class);
+        startService(intent);
     }
 }
